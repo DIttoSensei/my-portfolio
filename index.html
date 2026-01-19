@@ -8,7 +8,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Outfit:wght@900&display=swap');
         
-        body { font-family: 'Space Grotesk', sans-serif; background-color: #fff; scroll-behavior: smooth; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #fff; scroll-behavior: smooth; overflow-x: hidden; }
         .heading { font-family: 'Outfit', sans-serif; }
         
         ::selection { background: #000; color: #fff; }
@@ -27,11 +27,12 @@
             transform: translateY(-8px);
             box-shadow: 12px 12px 0px 0px rgba(0,0,0,1);
         }
+        .no-scroll { overflow: hidden !important; }
     </style>
 </head>
 <body class="p-6 md:p-12 pt-24 md:pt-32">
 
-    <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 p-6 md:p-8 border-b border-gray-50">
+    <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-[60] p-6 md:p-8 border-b border-gray-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="font-bold text-xl tracking-tighter">DS / 26</div>
             
@@ -41,18 +42,11 @@
                 <a href="#contact" class="hover:line-through">Contact</a>
             </div>
 
-            <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 focus:outline-none z-50">
+            <button id="menu-btn" class="md:hidden flex flex-col gap-1.5 focus:outline-none z-[100] p-2 -mr-2">
                 <span class="w-6 h-0.5 bg-black transition-all"></span>
                 <span class="w-6 h-0.5 bg-black transition-all"></span>
                 <span class="w-6 h-0.5 bg-black transition-all"></span>
             </button>
-        </div>
-
-        <div id="mobile-menu" class="fixed inset-0 bg-white translate-x-full transition-transform duration-300 z-40 flex flex-col items-center justify-center gap-10">
-            <a href="#work" class="mobile-link text-2xl font-black uppercase tracking-tighter hover:line-through">Work</a>
-            <a href="#stack" class="mobile-link text-2xl font-black uppercase tracking-tighter hover:line-through">Stack</a>
-            <a href="#contact" class="mobile-link text-2xl font-black uppercase tracking-tighter hover:line-through">Contact</a>
-            <button id="close-menu" class="mt-4 text-xs font-bold uppercase tracking-widest border-2 border-black px-6 py-2">Close</button>
         </div>
     </nav>
 
@@ -114,6 +108,7 @@
                         <a href="mailto:richardtommyandrew@gmail.com" class="text-lg md:text-xl block hover:underline break-all font-bold">richardtommyandrew@gmail.com</a>
                     </div>
                 </div>
+
                 <div class="border-0 md:border-l-2 border-slate-800 md:pl-8 pt-8 md:pt-0 border-t-2 md:border-t-0">
                     <p class="text-slate-500 mb-6 text-[10px] font-black uppercase tracking-[0.2em]">Quick Actions</p>
                     <div class="flex flex-col gap-6">
@@ -128,6 +123,16 @@
             </div>
         </div>
     </section>
+
+    <div id="menu-overlay" class="fixed inset-0 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300 z-[80] backdrop-blur-sm"></div>
+    
+    <div id="mobile-menu" class="fixed inset-0 bg-white translate-x-full transition-transform duration-300 z-[90] flex flex-col items-center justify-start pt-40 gap-10">
+        <a href="#work" class="mobile-link text-3xl font-black uppercase tracking-tighter">Work</a>
+        <a href="#stack" class="mobile-link text-3xl font-black uppercase tracking-tighter">Stack</a>
+        <a href="#contact" class="mobile-link text-3xl font-black uppercase tracking-tighter">Contact</a>
+        <div class="w-12 h-0.5 bg-slate-200"></div>
+        <button id="close-menu" class="text-xs font-bold uppercase tracking-widest border-2 border-black px-8 py-3">Close Menu</button>
+    </div>
 
     <script>
         const user = 'DIttoSensei';
@@ -164,25 +169,31 @@
         }
         loadRepos();
 
-        // Mobile Menu Logic
+        // Menu Logic
         const menuBtn = document.getElementById('menu-btn');
         const closeBtn = document.getElementById('close-menu');
         const mobileMenu = document.getElementById('mobile-menu');
+        const menuOverlay = document.getElementById('menu-overlay');
         const mobileLinks = document.querySelectorAll('.mobile-link');
 
-        function openMenu() {
-            mobileMenu.classList.remove('translate-x-full');
-            document.body.style.overflow = 'hidden';
+        function toggleMenu(isOpen) {
+            if(isOpen) {
+                mobileMenu.classList.remove('translate-x-full');
+                menuOverlay.classList.remove('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.add('opacity-100');
+                document.body.classList.add('no-scroll');
+            } else {
+                mobileMenu.classList.add('translate-x-full');
+                menuOverlay.classList.add('opacity-0', 'pointer-events-none');
+                menuOverlay.classList.remove('opacity-100');
+                document.body.classList.remove('no-scroll');
+            }
         }
 
-        function closeMenu() {
-            mobileMenu.classList.add('translate-x-full');
-            document.body.style.overflow = 'auto';
-        }
-
-        menuBtn.addEventListener('click', openMenu);
-        closeBtn.addEventListener('click', closeMenu);
-        mobileLinks.forEach(link => link.addEventListener('click', closeMenu));
+        menuBtn.addEventListener('click', () => toggleMenu(true));
+        closeBtn.addEventListener('click', () => toggleMenu(false));
+        menuOverlay.addEventListener('click', () => toggleMenu(false));
+        mobileLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
     </script>
 </body>
 </html>
