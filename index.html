@@ -147,7 +147,7 @@
         async function loadRepos() {
             try {
                 // cache-buster (?t=...) added to ensure live updates from GitHub
-                const res = await fetch(`https://api.github.com/users/${user}/repos?sort=pushed&per_page=12&t=${new Date().getTime()}`);
+                const res = await fetch(`https://api.github.com/users/${user}/repos?sort=pushed&per_page=20&t=${new Date().getTime()}`);
                 const data = await res.json();
                 const grid = document.getElementById('repo-grid');
                 grid.innerHTML = '';
