@@ -29,23 +29,12 @@
         }
         .no-scroll { overflow: hidden !important; }
     </style>
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
-    <title>My Portfolio | I transform complex logic into autonomous systems. Specializing in AI-driven pipelines and minimalist web architecture. </title>
+    
+    <!-- Meta Tags -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://my-portfolio-rouge-alpha-26.vercel.app/">
-    <meta property="og:title" content="My Portfolio | I transform complex logic into autonomous systems. Specializing in AI-driven pipelines and minimalist web architecture.">
-    <meta property="og:description" content="Ready to build the next system? Send a transmission.">
-    <meta property="og:image" content="https://my-portfolio-rouge-alpha-26.vercel.app/assets/preview-image.png">
-
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://my-portfolio-rouge-alpha-26.vercel.app/">
-    <meta property="twitter:title" content="My Portfolio | I transform complex logic into autonomous systems. Specializing in AI-driven pipelines and minimalist web architecture.">
-    <meta property="twitter:description" content="Ready to build the next system? Send a transmission.">
-    <meta property="twitter:image" content="https://my-portfolio-rouge-alpha-26.vercel.app/assets/preview-image.png">
-
+    <meta property="og:title" content="DIttoSensei | Code Architect">
+    <meta property="og:description" content="Transforming complex logic into autonomous systems.">
 </head>
 <body class="p-6 md:p-12 pt-24 md:pt-32">
 
@@ -87,11 +76,11 @@
     <section class="max-w-7xl mx-auto">
         <div class="flex justify-between items-end mb-12">
             <h2 class="heading text-4xl uppercase">Build Logs</h2>
-            <p class="text-slate-400 font-bold hidden md:block">GITHUB_STREAMS_V1.0</p>
+            <p class="text-slate-400 font-bold hidden md:block">GITHUB_STREAMS_V1.1</p>
         </div>
 
-        <div id="repo-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="h-64 bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center italic text-slate-400">Syncing with Mainframe...</div>
+        <div id="repo-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start">
+            <div class="h-64 bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center italic text-slate-400 col-span-full">Syncing with Mainframe...</div>
         </div>
     </section>
 
@@ -109,7 +98,7 @@
         </div>
     </section>
 
-    <section id="contact" class="max-w-7xl mx-auto py-32 border-t-2 border-black">
+    <footer id="contact" class="max-w-7xl mx-auto py-32 border-t-2 border-black">
         <div class="bg-black text-white p-6 md:p-12">
             <h2 class="heading text-4xl uppercase mb-6 text-white">Initialize Connection</h2>
             <p class="text-slate-400 mb-10 mono text-sm md:text-base italic">// Ready to build the next system? Send a transmission.</p>
@@ -129,18 +118,19 @@
                 <div class="border-0 md:border-l-2 border-slate-800 md:pl-8 pt-8 md:pt-0 border-t-2 md:border-t-0">
                     <p class="text-slate-500 mb-6 text-[10px] font-black uppercase tracking-[0.2em]">Quick Actions</p>
                     <div class="flex flex-col gap-6">
-                        <a href="https://github.com/DIttoSensei" class="group flex items-center gap-4 text-xl md:text-2xl font-black hover:translate-x-2 transition-transform">
+                        <a href="https://github.com/DIttoSensei" target="_blank" class="group flex items-center gap-4 text-xl md:text-2xl font-black hover:translate-x-2 transition-transform">
                             <span class="text-slate-600 group-hover:text-white">→</span> VIEW GITHUB
                         </a>
-                        <a href="https://x.com/dittosensei" class="group flex items-center gap-4 text-xl md:text-2xl font-black hover:translate-x-2 transition-transform">
+                        <a href="https://x.com/dittosensei" target="_blank" class="group flex items-center gap-4 text-xl md:text-2xl font-black hover:translate-x-2 transition-transform">
                             <span class="text-slate-600 group-hover:text-white">→</span> X FEED
                         </a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 
+    <!-- Overlay & Menu -->
     <div id="menu-overlay" class="fixed inset-0 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300 z-[80] backdrop-blur-sm"></div>
     
     <div id="mobile-menu" class="fixed inset-0 bg-white translate-x-full transition-transform duration-300 z-[90] flex flex-col items-center justify-start pt-40 gap-10">
@@ -156,34 +146,49 @@
 
         async function loadRepos() {
             try {
-                const res = await fetch(`https://api.github.com/users/${user}/repos?sort=updated&per_page=8`);
+                // cache-buster (?t=...) added to ensure live updates from GitHub
+                const res = await fetch(`https://api.github.com/users/${user}/repos?sort=pushed&per_page=12&t=${new Date().getTime()}`);
                 const data = await res.json();
                 const grid = document.getElementById('repo-grid');
                 grid.innerHTML = '';
 
                 data.forEach(repo => {
-                    if(!repo.fork) {
+                    // Filter: No forks, and exclude the profile README repo
+                    if(!repo.fork && repo.name.toLowerCase() !== user.toLowerCase()) {
+                        const description = repo.description || 'System core components and autonomous logic.';
+                        const language = repo.language || 'Logic';
+                        
                         grid.innerHTML += `
                         <div class="repo-card p-8 flex flex-col justify-between h-80 bg-white">
                             <div>
                                 <div class="flex justify-between items-start mb-6">
-                                    <span class="text-[10px] font-bold uppercase tracking-widest bg-slate-100 px-2 py-1">${repo.language || 'Logic'}</span>
-                                    <a href="${repo.html_url}" target="_blank">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5"/></svg>
+                                    <span class="text-[10px] font-bold uppercase tracking-widest bg-slate-100 px-2 py-1">${language}</span>
+                                    <a href="${repo.html_url}" target="_blank" class="hover:scale-110 transition-transform">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                     </a>
                                 </div>
-                                <h3 class="heading text-2xl uppercase font-black mb-3">${repo.name}</h3>
-                                <p class="text-slate-500 text-sm font-medium leading-snug line-clamp-3">${repo.description || 'System core components and autonomous logic.'}</p>
+                                <h3 class="heading text-2xl uppercase font-black mb-3 truncate" title="${repo.name}">${repo.name.replace(/-/g, ' ')}</h3>
+                                <p class="text-slate-500 text-sm font-medium leading-snug line-clamp-3">${description}</p>
                             </div>
-                            <div class="flex gap-6 mt-8">
-                                <span class="text-xs font-black">STARS: ${repo.stargazers_count}</span>
-                                <span class="text-xs font-black">FORKS: ${repo.forks_count}</span>
+                            <div class="flex gap-6 mt-8 pt-4 border-t border-slate-50">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] font-black uppercase text-slate-400">Stars</span>
+                                    <span class="text-xs font-black">${repo.stargazers_count}</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[9px] font-black uppercase text-slate-400">Forks</span>
+                                    <span class="text-xs font-black">${repo.forks_count}</span>
+                                </div>
                             </div>
                         </div>`;
                     }
                 });
-            } catch (e) { console.error("API ERROR", e); }
+            } catch (e) { 
+                console.error("API ERROR", e); 
+                document.getElementById('repo-grid').innerHTML = '<div class="col-span-full text-center py-12 font-bold uppercase">Transmission Interrupted. Check Connection.</div>';
+            }
         }
+        
         loadRepos();
 
         // Menu Logic
